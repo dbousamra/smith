@@ -1,0 +1,16 @@
+{
+  "name": "smith",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "dev": "vite dev"
+  },
+  "dependencies": {
+    "pixi.js": "^7.0.5"
+  },
+  "devDependencies": {
+    "prettier": "^2.8.1",
+    "vite": "^4.0.3"
+  }
+}
