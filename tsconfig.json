@@ -6,6 +6,7 @@
     "module": "CommonJS",
     "sourceMap": true,
     // Set your preferences here for TypeScript
-    "strict": true
+    "strict": true,
+    "esModuleInterop": true
   }
 }

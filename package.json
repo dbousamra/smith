@@ -7,9 +7,12 @@
     "dev": "vite dev"
   },
   "dependencies": {
+    "@pixi/math-extras": "^7.0.5",
+    "lodash": "^4.17.21",
     "pixi.js": "^7.0.5"
   },
   "devDependencies": {
+    "@types/lodash": "^4.14.191",
     "prettier": "^2.8.1",
     "vite": "^4.0.3"
   }

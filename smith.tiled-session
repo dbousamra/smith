@@ -1,0 +1,39 @@
+{
+    "activeFile": "",
+    "expandedProjectPaths": [
+    ],
+    "file.lastUsedOpenFilter": "All Files (*)",
+    "fileStates": {
+        "assets/jawbreaker_tiles.tsx": {
+            "scaleInDock": 1
+        },
+        "assets/map.json": {
+            "scale": 6.2521875,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 128.91487979207278,
+                "y": 50.86219823061929
+            }
+        },
+        "jawbreaker_tiles.tsx": {
+            "scaleInDock": 3,
+            "scaleInEditor": 5.5
+        },
+        "tiles.tmj": {
+            "scale": 6.2521875,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 130.03448792922478,
+                "y": 81.25156195331635
+            }
+        }
+    },
+    "openFiles": [
+    ],
+    "project": "",
+    "recentFiles": [
+        "assets/map.json",
+        "jawbreaker_tiles.tsx",
+        "tiles.tmj"
+    ]
+}

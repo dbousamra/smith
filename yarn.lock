@@ -208,6 +208,11 @@
   resolved "https://registry.yarnpkg.com/@pixi/graphics/-/graphics-7.0.5.tgz#3a5558fdceaef316bb0044cf84a7f1856777b9f6"
   integrity sha512-I5Y6IpntiEoJB0HOZ7nSw8r3ZHMyyeE8RMCc3Aud6j5B6CtBkpqCHyxOFNmDod2Ymznj/hWBhLl4ee8SJjRdWg==
 
+"@pixi/math-extras@^7.0.5":
+  version "7.0.5"
+  resolved "https://registry.yarnpkg.com/@pixi/math-extras/-/math-extras-7.0.5.tgz#0d14824a6d443e2fc5b888b8a19b49625a1729a9"
+  integrity sha512-8WieySTbzVVK5yqeC/l3A+n7SVgNFW1Rpr/xTaEgdZABRzvFLgnHs59tKbR5/lWo/MToSbbY/2vrXsJGbjrCCg==
+
 "@pixi/math@7.0.5":
   version "7.0.5"
   resolved "https://registry.yarnpkg.com/@pixi/math/-/math-7.0.5.tgz#5b5c727e931eb578f3a1d6482483bc5e9036758b"
@@ -321,6 +326,11 @@
   resolved "https://registry.yarnpkg.com/@types/earcut/-/earcut-2.1.1.tgz#573a0af609f17005c751f6f4ffec49cfe358ea51"
   integrity sha512-w8oigUCDjElRHRRrMvn/spybSMyX8MTkKA5Dv+tS1IE/TgmNZPqUYtvYBXGY8cieSE66gm+szeK+bnbxC2xHTQ==
 
+"@types/lodash@^4.14.191":
+  version "4.14.191"
+  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.191.tgz#09511e7f7cba275acd8b419ddac8da9a6a79e2fa"
+  integrity sha512-BdZ5BCCvho3EIXw6wUCXHe7rS53AIDPLE+JzwgT+OsJk53oBfbSmZZ7CX4VaRoN78N+TJpFi9QPlfIVNmJYWxQ==
+
 "@types/offscreencanvas@^2019.6.4":
   version "2019.7.0"
   resolved "https://registry.yarnpkg.com/@types/offscreencanvas/-/offscreencanvas-2019.7.0.tgz#e4a932069db47bb3eabeb0b305502d01586fa90d"
@@ -387,6 +397,11 @@ is-core-module@^2.9.0:
   integrity sha512-RRjxlvLDkD1YJwDbroBHMb+cukurkDWNyHx7D3oNB5x9rb5ogcksMC5wHCadcXoo67gVr/+3GFySh3134zi6rw==
   dependencies:
     has "^1.0.3"
+
+lodash@^4.17.21:
+  version "4.17.21"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.21.tgz#679591c564c3bffaae8454cf0b3df370c3d6911c"
+  integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==
 
 nanoid@^3.3.4:
   version "3.3.4"
