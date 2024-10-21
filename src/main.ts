@@ -11,6 +11,9 @@ import { InputSystem } from './systems/inputSystem';
 import { SpriteSystem } from './systems/spriteSystem';
 import { loadAnimatedSprite, loadEnemies, loadTiles, randomIntFromInterval } from './utils';
 import { MovementSystem } from './systems/movementSystem';
+import { AbilitySystem } from './systems/abilitySystem';
+import { Enemy } from './components/enemy';
+import { Ability } from './components/ability';
 
 const init = async () => {
   const app = new Pixi.Application({
@@ -26,6 +29,7 @@ const init = async () => {
   ecs.addSystem(new InputSystem());
   ecs.addSystem(new MovementSystem());
   ecs.addSystem(new HomingSystem());
+  ecs.addSystem(new AbilitySystem(app));
 
   // Add tiles
   const textures = await loadTiles('./assets/tileset.png');
@@ -55,24 +59,38 @@ const init = async () => {
   )();
   playerSprite.x = app.screen.width / 2;
   playerSprite.y = app.screen.height / 2;
+  playerSprite.anchor.set(0.5, 0.5);
   playerSprite.scale.set(4);
-  ecs.addComponent(player, new Sprite(playerSprite), new Input(), new Velocity(0, 0, 4));
+  ecs.addComponent(
+    player,
+    new Sprite(playerSprite),
+    new Input(),
+    new Velocity(0, 0, 4),
+    new Ability('wand'),
+  );
 
   // Add enemies
   const enemySprites = await loadEnemies();
-  _.times(10, () => {
+  _.times(3, () => {
     _.each(enemySprites, (getSprite) => {
       const entity = ecs.addEntity();
       const sprite = getSprite();
+      sprite.anchor.set(0.5, 0.5);
       sprite.scale.set(4);
       sprite.x = randomIntFromInterval(0, app.screen.width);
       sprite.y = randomIntFromInterval(0, app.screen.height);
-      ecs.addComponent(entity, new Sprite(sprite), new Velocity(0, 0, 2), new Homing(player));
+      ecs.addComponent(
+        entity,
+        new Sprite(sprite),
+        new Velocity(0, 0, 1),
+        new Homing(player),
+        new Enemy(),
+      );
     });
   });
 
-  app.ticker.add(() => {
-    ecs.update();
+  app.ticker.add((dt) => {
+    ecs.update(dt);
   });
 };
 

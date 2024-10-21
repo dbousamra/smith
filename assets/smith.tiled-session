@@ -1,5 +1,5 @@
 {
-    "activeFile": "",
+    "activeFile": "map.tmx",
     "expandedProjectPaths": [
         "."
     ],
@@ -15,6 +15,14 @@
             "viewCenter": {
                 "x": 120.11795871444994,
                 "y": 80.13195381616435
+            }
+        },
+        "map.tmx": {
+            "scale": 2,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 130,
+                "y": 142.5
             }
         },
         "tiles.tmj": {
@@ -36,9 +44,11 @@
     },
     "last.externalTilesetPath": "/Users/dbousamra/Code/Misc/smith/assets",
     "openFiles": [
+        "map.tmx"
     ],
     "project": "smith.tiled-project",
     "recentFiles": [
+        "map.tmx",
         "tiles.tsx",
         "jawbreaker_tiles.tsx",
         "map.json",

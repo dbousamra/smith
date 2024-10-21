@@ -1,8 +1,12 @@
 export type Entity = number;
 
+export type UpdateMeta = {
+  dt: number;
+};
+
 export interface System {
   componentsRequired: Set<Function>;
-  update: (ecs: ECS, entities: Set<Entity>) => void;
+  update: (ecs: ECS, entities: Set<Entity>, meta: UpdateMeta) => void;
 }
 
 export abstract class Component {}
@@ -71,6 +75,25 @@ export class ECS {
     this.checkE(entity);
   }
 
+  findFirstEntity(componentClass: Function): Entity | undefined {
+    for (const [entity, components] of this.entities.entries()) {
+      if (components.has(componentClass)) {
+        return entity;
+      }
+    }
+    return undefined;
+  }
+
+  findEntities(componentClass: Function): Entity[] {
+    const entities: Entity[] = [];
+    for (const [entity, components] of this.entities.entries()) {
+      if (components.has(componentClass)) {
+        entities.push(entity);
+      }
+    }
+    return entities;
+  }
+
   addSystem(system: System): void {
     if (system.componentsRequired.size == 0) {
       return;
@@ -86,9 +109,9 @@ export class ECS {
     this.systems.delete(system);
   }
 
-  update(): void {
+  update(dt: number): void {
     for (let [system, entities] of this.systems.entries()) {
-      system.update(this, entities);
+      system.update(this, entities, { dt });
     }
 
     while (this.entitiesToDestroy.length > 0) {
