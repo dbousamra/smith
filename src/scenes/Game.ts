@@ -72,12 +72,6 @@ export class Game extends Phaser.Scene {
     }
   }
 
-  // explodeAt(x: number, y: number) {
-  //   const blood = this.add.sprite(x, y, 'blood');
-  //   blood.play('blood-explode');
-  //   this.add.particles(x, y, 'redPixel', bloodParticlesConfig).explode(100);
-  // }
-
   update(time: number, delta: number): void {
     if (this.gameOver) {
       this.scene.switch('GameOver');
