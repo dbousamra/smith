@@ -1,4 +1,6 @@
 export class Boot extends Phaser.Scene {
+  startText!: Phaser.GameObjects.Text;
+
   constructor() {
     super('Boot');
   }
@@ -23,6 +25,17 @@ export class Boot extends Phaser.Scene {
       frameWidth: 36,
       frameHeight: 39,
     });
+
+    this.load.spritesheet('blood', 'assets/blood.png', {
+      frameWidth: 100,
+      frameHeight: 100,
+    });
+
+    const graphics = this.add.graphics();
+    graphics.fillStyle(0xff0000, 1);
+    graphics.fillRect(0, 0, 2, 2);
+    graphics.generateTexture('redPixel', 2, 2);
+    graphics.destroy();
   }
 
   create() {
@@ -38,6 +51,24 @@ export class Boot extends Phaser.Scene {
       frameRate: 15, // Frames per second
       repeat: -1, // -1 means loop indefinitely
     });
-    this.scene.start('Game');
+
+    this.anims.create({
+      key: 'blood-explode',
+      frames: this.anims.generateFrameNumbers('blood', { start: 0, end: 22 }), // Adjust range as needed
+      frameRate: 60, // Adjust to control the speed
+      hideOnComplete: true, // Optional: Automatically hide after animation
+    });
+
+    this.startText = this.add
+      .text(this.cameras.main.centerX, this.cameras.main.centerY, 'Press any key to start', {
+        fontSize: '32px',
+        color: '#ffffff',
+      })
+      .setOrigin(0.5);
+
+    this.input.keyboard!.once('keydown', () => {
+      this.startText.destroy();
+      this.scene.start('Game');
+    });
   }
 }

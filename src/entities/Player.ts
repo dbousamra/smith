@@ -1,4 +1,4 @@
-import { Constants } from '../utils';
+import { constants } from '../utils';
 import { Weapon } from './Weapon';
 import { Enemy } from './Enemy';
 import { Bullet } from './Bullet';
@@ -10,7 +10,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
   private dashCooldown: number = 0;
   private dashVelocity: { x: number; y: number } = { x: 0, y: 0 };
 
-  health: number = 100;
+  health: number = constants.PLAYER_HEALTH;
 
   bullets: Phaser.Physics.Arcade.Group;
 
@@ -47,15 +47,15 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     let velocityY = 0;
 
     if (this.keys.A.isDown) {
-      velocityX = -Constants.PLAYER_SPEED;
+      velocityX = -constants.PLAYER_SPEED;
     } else if (this.keys.D.isDown) {
-      velocityX = Constants.PLAYER_SPEED;
+      velocityX = constants.PLAYER_SPEED;
     }
 
     if (this.keys.W.isDown) {
-      velocityY = -Constants.PLAYER_SPEED;
+      velocityY = -constants.PLAYER_SPEED;
     } else if (this.keys.S.isDown) {
-      velocityY = Constants.PLAYER_SPEED;
+      velocityY = constants.PLAYER_SPEED;
     }
 
     if (
@@ -64,11 +64,11 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
       this.scene.time.now > this.dashCooldown
     ) {
       this.isDashing = true;
-      this.dashTime = this.scene.time.now + Constants.DASH_DURATION;
-      this.dashCooldown = this.scene.time.now + Constants.DASH_COOLDOWN;
+      this.dashTime = this.scene.time.now + constants.DASH_DURATION;
+      this.dashCooldown = this.scene.time.now + constants.DASH_COOLDOWN;
       this.dashVelocity = {
-        x: this.body!.velocity.x * Constants.DASH_MULTIPLIER,
-        y: this.body!.velocity.y * Constants.DASH_MULTIPLIER,
+        x: this.body!.velocity.x * constants.DASH_MULTIPLIER,
+        y: this.body!.velocity.y * constants.DASH_MULTIPLIER,
       };
     }
 

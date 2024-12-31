@@ -1,9 +1,8 @@
+import { constants } from '../utils';
 import { Bullet } from './Bullet';
 
 export class Weapon extends Phaser.GameObjects.Sprite {
-  fireRate: number = 0;
-  nextFire: number = 0;
-  projectileSpeed: number = 300; // Set a default projectile speed
+  projectileSpeed: number = constants.PROJECTILE_SPEED; // Set a default projectile speed
   projectileLifespan: number = 0;
   bullets: Phaser.Physics.Arcade.Group;
 
@@ -23,7 +22,7 @@ export class Weapon extends Phaser.GameObjects.Sprite {
 
     // Add a timer to shoot every 1 second
     scene.time.addEvent({
-      delay: 200,
+      delay: constants.PROJECTILE_FIRE_DELAY,
       callback: this.shoot,
       callbackScope: this,
       loop: true,
@@ -31,18 +30,15 @@ export class Weapon extends Phaser.GameObjects.Sprite {
   }
 
   shoot() {
-    if (this.scene.time.now > this.nextFire) {
-      this.nextFire = this.scene.time.now + this.fireRate;
-      const bullet = new Bullet(this.scene, this.x, this.y);
-      this.bullets.add(bullet);
+    const bullet = new Bullet(this.scene, this.x, this.y, Phaser.Math.Between(20, 80));
+    this.bullets.add(bullet);
 
-      // Calculate direction towards the mouse pointer
-      const pointer = this.scene.input.activePointer;
-      const angle = Phaser.Math.Angle.Between(this.x, this.y, pointer.worldX, pointer.worldY);
-      const velocityX = Math.cos(angle) * this.projectileSpeed;
-      const velocityY = Math.sin(angle) * this.projectileSpeed;
+    // Calculate direction towards the mouse pointer
+    const pointer = this.scene.input.activePointer;
+    const angle = Phaser.Math.Angle.Between(this.x, this.y, pointer.worldX, pointer.worldY);
+    const velocityX = Math.cos(angle) * this.projectileSpeed;
+    const velocityY = Math.sin(angle) * this.projectileSpeed;
 
-      (bullet.body! as Phaser.Physics.Arcade.Body).setVelocity(velocityX, velocityY);
-    }
+    (bullet.body! as Phaser.Physics.Arcade.Body).setVelocity(velocityX, velocityY);
   }
 }

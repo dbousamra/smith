@@ -1,18 +1,23 @@
 import Phaser from 'phaser';
-import { Player } from '../entities/Player';
-import { Enemy } from '../entities/Enemy';
-import { Constants } from '../utils';
 import { Bullet } from '../entities/Bullet';
+import { Enemy } from '../entities/Enemy';
+import { Player } from '../entities/Player';
+import { WavesManager } from '../managers/WavesManager';
+import { bloodExplosionConfig } from '../utils';
 
 export class Game extends Phaser.Scene {
+  gameOver!: boolean;
   player!: Player;
   enemies!: Phaser.Physics.Arcade.Group;
+  wavesManager!: WavesManager;
 
   constructor() {
     super('Game');
   }
 
   create() {
+    this.gameOver = false;
+
     const width = this.sys.game.config.width as number;
     const height = this.sys.game.config.height as number;
     this.add.rectangle(width / 2, height / 2, width, height, 0x60577a);
@@ -44,45 +49,47 @@ export class Game extends Phaser.Scene {
       this,
     );
 
-    this.spawnEnemy();
-
-    // Add a timer to shoot every 1 second
-    this.time.addEvent({
-      delay: 200,
-      callback: this.spawnEnemy,
-      callbackScope: this,
-      loop: true,
-    });
+    this.wavesManager = new WavesManager(this, this.enemies, this.player);
+    this.wavesManager.start();
 
     this.scene.launch('WorldUI', {
       player: this.player,
+      wavesManager: this.wavesManager,
     });
   }
 
   onCollideBulletEnemy(bullet: Bullet, enemy: Enemy) {
+    enemy.takeDamage(bullet.damage);
     bullet.destroy();
-    enemy.destroy();
   }
 
   onCollidePlayerEnemy(player: Player, enemy: Enemy) {
-    console.log('Player collided with enemy');
     enemy.destroy();
     player.handleHit();
+
+    if (player.health <= 0) {
+      this.gameOver = true;
+    }
   }
 
+  // explodeAt(x: number, y: number) {
+  //   const blood = this.add.sprite(x, y, 'blood');
+  //   blood.play('blood-explode');
+  //   this.add.particles(x, y, 'redPixel', bloodParticlesConfig).explode(100);
+  // }
+
   update(time: number, delta: number): void {
+    if (this.gameOver) {
+      this.scene.switch('GameOver');
+      return;
+    }
+
     this.player.update();
+    this.wavesManager.update();
 
     this.enemies.children.iterate((obj) => {
       obj.update();
       return true;
     });
-  }
-
-  spawnEnemy() {
-    const x = Phaser.Math.Between(0, this.scale.width);
-    const y = Phaser.Math.Between(0, this.scale.height);
-    const enemy = new Enemy(this, x, y, this.player);
-    this.enemies.add(enemy);
   }
 }
