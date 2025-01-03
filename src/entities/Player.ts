@@ -1,7 +1,7 @@
 import { constants } from '../utils';
-import { Weapon } from './Weapon';
-import { Enemy } from './Enemy';
 import { Bullet } from './Bullet';
+import { Enemy } from './Enemy';
+import { Weapon } from './Weapon';
 
 export class Player extends Phaser.Physics.Arcade.Sprite {
   private keys: Record<string, Phaser.Input.Keyboard.Key>;
@@ -15,6 +15,8 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
   bullets: Phaser.Physics.Arcade.Group;
 
   private weapons: Weapon[] = [];
+
+  thunderclapCooldown: boolean;
 
   constructor(scene: Phaser.Scene, x: number, y: number) {
     super(scene, x, y, 'player');
@@ -31,6 +33,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
       S: Phaser.Input.Keyboard.KeyCodes.S,
       D: Phaser.Input.Keyboard.KeyCodes.D,
       SPACE: Phaser.Input.Keyboard.KeyCodes.SPACE,
+      Q: Phaser.Input.Keyboard.KeyCodes.Q,
     }) as Record<string, Phaser.Input.Keyboard.Key>;
 
     this.bullets = scene.physics.add.group({
@@ -40,6 +43,8 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
 
     // Create a weapon
     this.weapons.push(new Weapon(scene, x, y, this.bullets));
+
+    this.thunderclapCooldown = false;
   }
 
   handleInput() {
@@ -77,6 +82,10 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     } else {
       this.setVelocity(velocityX, velocityY);
     }
+
+    if (Phaser.Input.Keyboard.JustDown(this.keys.Q)) {
+      this.useThunderclap();
+    }
   }
 
   handleAnimation() {
@@ -106,6 +115,51 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
       this.scene.children.bringToTop(weapon);
       weapon.setPosition(this.x + this.width, this.y - this.height);
       weapon.update();
+    });
+  }
+
+  useThunderclap() {
+    if (this.thunderclapCooldown) {
+      return;
+    }
+
+    this.thunderclapCooldown = true;
+    this.scene.time.delayedCall(6000, () => {
+      this.thunderclapCooldown = false;
+    });
+
+    const thunderclapRadius = 200;
+    const thunderclapDamage = 100;
+    const thunderclapSlowDuration = 2000;
+
+    const enemies = this.scene.physics
+      .overlapCirc(this.x, this.y, thunderclapRadius, true, true)
+      .map((e) => e.gameObject)
+      .filter((e) => e instanceof Enemy);
+
+    enemies.forEach((enemy) => {
+      enemy.takeDamage(thunderclapDamage);
+      enemy.setTint(0x0000ff); // Change color to indicate slow effect
+      this.scene.time.delayedCall(thunderclapSlowDuration, () => {
+        enemy.clearTint();
+      });
+    });
+
+    // // Add visual effect for thunderclap
+    const thunderclapEffect = this.scene.add.circle(
+      this.x,
+      this.y,
+      thunderclapRadius,
+      0x00ffff,
+      0.5,
+    );
+    this.scene.tweens.add({
+      targets: thunderclapEffect,
+      alpha: 0,
+      duration: 400,
+      onComplete: () => {
+        thunderclapEffect.destroy();
+      },
     });
   }
 }

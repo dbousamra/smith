@@ -18,7 +18,7 @@ export class WavesManager {
     this.player = player;
     this.wave = 1;
     this.enemiesLeftToSpawn = 40; // Number of enemies per wave
-    this.spawnDelay = 1000; // Initial spawn delay in milliseconds
+    this.spawnDelay = 600; // Initial spawn delay in milliseconds
     this.waveActive = false;
     this.waveTransition = false;
   }
@@ -62,8 +62,8 @@ export class WavesManager {
       return;
     }
     this.enemiesLeftToSpawn = 10; // Reset the number of enemies for the next wave
-    this.spawnDelay -= 500; // Decrease spawn delay for the next wave
+    this.spawnDelay -= 100; // Decrease spawn delay for the next wave
     this.waveActive = false;
-    this.scene.time.delayedCall(1000, this.startWave, [], this); // Start the next wave after a short delay
+    this.scene.time.delayedCall(4000, this.startWave, [], this); // Start the next wave after a short delay
   }
 }

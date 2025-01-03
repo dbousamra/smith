@@ -8,8 +8,10 @@ export const constants = {
   DASH_MULTIPLIER: 4,
   DASH_COOLDOWN: 1500,
 
-  PROJECTILE_SPEED: 500,
-  PROJECTILE_FIRE_DELAY: 400,
+  PROJECTILE_SPEED: 700,
+  PROJECTILE_FIRE_DELAY: 100,
+
+  ENEMY_FIRE_DELAY: 3000,
 };
 
 export const bloodExplosionConfig: Phaser.Types.GameObjects.Particles.ParticleEmitterConfig = {
