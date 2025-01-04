@@ -1,8 +1,11 @@
 export const constants = {
   PLAYER_SPEED: 300,
   PLAYER_HEALTH: 100,
+  PLAYER_COINS: 0,
 
+  ENEMY_HEALTH: 100,
   ENEMY_SPEED: 120,
+  ENEMY_FIRE_DELAY: 3000,
 
   DASH_DURATION: 200,
   DASH_MULTIPLIER: 4,
@@ -11,7 +14,12 @@ export const constants = {
   PROJECTILE_SPEED: 700,
   PROJECTILE_FIRE_DELAY: 100,
 
-  ENEMY_FIRE_DELAY: 3000,
+  COIN_PICKUP_RADIUS: 150,
+  COIN_PICKUP_SPEED: 600,
+
+  WAVE_ENEMY_COUNT: 60,
+  WAVE_SPAWN_DELAY: 200,
+  WAVE_DELAY_BETWEEN: 10000,
 };
 
 export const bloodExplosionConfig: Phaser.Types.GameObjects.Particles.ParticleEmitterConfig = {

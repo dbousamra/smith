@@ -2,12 +2,12 @@ import Phaser from 'phaser';
 import { Player } from '../entities/Player';
 import { WavesManager } from '../managers/WavesManager';
 
-export class WorldUI extends Phaser.Scene {
+export class GameUI extends Phaser.Scene {
   healthText!: Phaser.GameObjects.Text;
   fpsText!: Phaser.GameObjects.Text;
   waveText!: Phaser.GameObjects.Text;
-  enemiesRemainingText!: Phaser.GameObjects.Text;
   waveAlertText!: Phaser.GameObjects.Text;
+  coinText!: Phaser.GameObjects.Text;
 
   player!: Player;
   wavesManager!: WavesManager;
@@ -41,12 +41,12 @@ export class WorldUI extends Phaser.Scene {
     this.waveText.setScrollFactor(0);
     this.waveText.setDepth(10);
 
-    this.enemiesRemainingText = this.add.text(200, 250, 'Enemies Remaining: 10', {
+    this.coinText = this.add.text(200, 250, 'Coins: 0', {
       fontSize: '20px',
-      color: '#ff00ff',
+      color: '#ffff00',
     });
-    this.enemiesRemainingText.setScrollFactor(0);
-    this.enemiesRemainingText.setDepth(10);
+    this.coinText.setScrollFactor(0);
+    this.coinText.setDepth(10);
 
     this.waveAlertText = this.add.text(this.cameras.main.centerX, this.cameras.main.centerY, '', {
       fontSize: '40px',
@@ -62,7 +62,7 @@ export class WorldUI extends Phaser.Scene {
     this.healthText.setText(`Health: ${this.player.health}%`);
     this.fpsText.setText(`FPS: ${Math.floor(this.game.loop.actualFps)}`);
     this.waveText.setText(`Wave: ${this.wavesManager.wave}`);
-    this.enemiesRemainingText.setText(`Enemies Remaining: ${this.wavesManager.enemiesLeftToSpawn}`);
+    this.coinText.setText(`Coins: ${this.player.coins}`);
     if (this.wavesManager.waveTransition) {
       this.showWaveAlert(`Wave ${this.wavesManager.wave}`);
       this.wavesManager.waveTransition = false;

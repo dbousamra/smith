@@ -14,11 +14,8 @@ export class Weapon extends Phaser.GameObjects.Sprite {
     // Add weapon to the scene
     scene.add.existing(this);
 
-    // Enable physics propertiess
+    // Enable physics properties
     scene.physics.add.existing(this);
-
-    // // Create a group for projectiles
-    // this.projectiles = scene.physics.add.group();
 
     // Add a timer to shoot every 1 second
     scene.time.addEvent({
@@ -40,5 +37,17 @@ export class Weapon extends Phaser.GameObjects.Sprite {
     const velocityY = Math.sin(angle) * this.projectileSpeed;
 
     (bullet.body! as Phaser.Physics.Arcade.Body).setVelocity(velocityX, velocityY);
+  }
+
+  update() {
+    // Rotate the weapon to point towards the cursor
+    const pointer = this.scene.input.activePointer;
+    const angle = Phaser.Math.Angle.Between(this.x, this.y, pointer.worldX, pointer.worldY);
+    this.setRotation(angle);
+
+    // Adjust the position to ensure the top right of the sprite points towards the cursor
+    const offsetX = Math.cos(angle) * this.width * 0.5;
+    const offsetY = Math.sin(angle) * this.height * 0.5;
+    this.setPosition(this.x + offsetX, this.y + offsetY);
   }
 }

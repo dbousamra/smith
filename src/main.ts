@@ -1,7 +1,7 @@
 import Phaser from 'phaser';
 import { Game } from './scenes/Game';
 import { Boot } from './scenes/Boot';
-import { WorldUI } from './scenes/WorldUI';
+import { GameUI } from './scenes/GameUI';
 import { GameOver } from './scenes/GameOver';
 import { GameComplete } from './scenes/GameComplete';
 
@@ -14,7 +14,7 @@ const init = async () => {
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,
     backgroundColor: '#23272a',
-    scene: [Boot, Game, WorldUI, GameOver, GameComplete],
+    scene: [Boot, Game, GameUI, GameOver, GameComplete],
     physics: {
       default: 'arcade',
       arcade: {

@@ -1,24 +1,32 @@
 import Phaser from 'phaser';
 import { Player } from '../entities/Player';
 import { Enemy } from '../entities/Enemy';
+import { constants } from '../utils';
 
 export class WavesManager {
   scene: Phaser.Scene;
   enemies: Phaser.Physics.Arcade.Group;
+  coins: Phaser.Physics.Arcade.Group;
   player: Player;
   wave: number;
   enemiesLeftToSpawn: number;
-  spawnDelay: number;
+  initialSpawnDelay: number;
   waveActive: boolean;
   waveTransition: boolean;
 
-  constructor(scene: Phaser.Scene, enemies: Phaser.Physics.Arcade.Group, player: Player) {
+  constructor(
+    scene: Phaser.Scene,
+    enemies: Phaser.Physics.Arcade.Group,
+    coins: Phaser.Physics.Arcade.Group,
+    player: Player,
+  ) {
     this.scene = scene;
     this.enemies = enemies;
+    this.coins = coins;
     this.player = player;
     this.wave = 1;
-    this.enemiesLeftToSpawn = 40; // Number of enemies per wave
-    this.spawnDelay = 600; // Initial spawn delay in milliseconds
+    this.enemiesLeftToSpawn = constants.WAVE_ENEMY_COUNT; // Number of enemies per wave
+    this.initialSpawnDelay = constants.WAVE_SPAWN_DELAY;
     this.waveActive = false;
     this.waveTransition = false;
   }
@@ -36,7 +44,7 @@ export class WavesManager {
   startWave() {
     this.waveActive = true;
     this.scene.time.addEvent({
-      delay: this.spawnDelay,
+      delay: this.initialSpawnDelay,
       callback: this.spawnEnemy,
       callbackScope: this,
       loop: true,
@@ -48,7 +56,7 @@ export class WavesManager {
     if (this.enemiesLeftToSpawn > 0) {
       const x = Phaser.Math.Between(0, this.scene.scale.width);
       const y = Phaser.Math.Between(0, this.scene.scale.height);
-      const enemy = new Enemy(this.scene, x, y, this.player);
+      const enemy = new Enemy(this.scene, x, y, this.player, this.coins);
       this.enemies.add(enemy);
       this.enemiesLeftToSpawn--;
     }
@@ -61,9 +69,10 @@ export class WavesManager {
       this.scene.scene.start('GameComplete');
       return;
     }
-    this.enemiesLeftToSpawn = 10; // Reset the number of enemies for the next wave
-    this.spawnDelay -= 100; // Decrease spawn delay for the next wave
+    this.enemiesLeftToSpawn = constants.WAVE_ENEMY_COUNT; // Reset the number of enemies for the next wave
+    this.initialSpawnDelay -= 10; // Decrease spawn delay for the next wave
     this.waveActive = false;
-    this.scene.time.delayedCall(4000, this.startWave, [], this); // Start the next wave after a short delay
+
+    this.scene.time.delayedCall(constants.WAVE_DELAY_BETWEEN, this.startWave, [], this); // Start the next wave after a short delay
   }
 }

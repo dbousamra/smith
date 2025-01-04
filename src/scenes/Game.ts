@@ -3,12 +3,14 @@ import { Bullet } from '../entities/Bullet';
 import { Enemy } from '../entities/Enemy';
 import { Player } from '../entities/Player';
 import { WavesManager } from '../managers/WavesManager';
-import { bloodExplosionConfig } from '../utils';
+import { Coin } from '../entities/Coin';
+import { constants } from '../utils';
 
 export class Game extends Phaser.Scene {
   gameOver!: boolean;
   player!: Player;
   enemies!: Phaser.Physics.Arcade.Group;
+  coins!: Phaser.Physics.Arcade.Group;
   wavesManager!: WavesManager;
 
   constructor() {
@@ -24,6 +26,11 @@ export class Game extends Phaser.Scene {
 
     this.enemies = this.physics.add.group({
       classType: Enemy,
+      runChildUpdate: true,
+    });
+
+    this.coins = this.physics.add.group({
+      classType: Coin,
       runChildUpdate: true,
     });
 
@@ -49,13 +56,24 @@ export class Game extends Phaser.Scene {
       this,
     );
 
-    this.wavesManager = new WavesManager(this, this.enemies, this.player);
+    this.physics.add.collider(
+      this.player,
+      this.coins,
+      this.onCollidePlayerCoins as Phaser.Types.Physics.Arcade.ArcadePhysicsCallback,
+      undefined,
+      this,
+    );
+
+    this.wavesManager = new WavesManager(this, this.enemies, this.coins, this.player);
     this.wavesManager.start();
 
     this.scene.launch('WorldUI', {
       player: this.player,
       wavesManager: this.wavesManager,
     });
+
+    const coin = new Coin(this, 100, 100);
+    this.coins.add(coin);
   }
 
   onCollideBulletEnemy(bullet: Bullet, enemy: Enemy) {
@@ -72,6 +90,10 @@ export class Game extends Phaser.Scene {
     }
   }
 
+  onCollidePlayerCoins(player: Player, coin: Coin) {
+    player.collectCoin(coin);
+  }
+
   update(time: number, delta: number): void {
     if (this.gameOver) {
       this.scene.switch('GameOver');
@@ -81,8 +103,14 @@ export class Game extends Phaser.Scene {
     this.player.update();
     this.wavesManager.update();
 
-    this.enemies.children.iterate((obj) => {
-      obj.update();
+    this.coins.children.iterate((obj) => {
+      const coin = obj as Coin;
+
+      const distance = Phaser.Math.Distance.Between(this.player.x, this.player.y, coin.x, coin.y);
+
+      if (distance < constants.COIN_PICKUP_RADIUS) {
+        this.physics.moveToObject(coin, this.player, constants.COIN_PICKUP_SPEED);
+      }
       return true;
     });
   }

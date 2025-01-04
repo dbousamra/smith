@@ -1,13 +1,23 @@
 import { bloodExplosionConfig, bloodDamageConfig, constants } from '../utils';
+import { Coin } from './Coin';
 
 export class Enemy extends Phaser.Physics.Arcade.Sprite {
-  private target: Phaser.Physics.Arcade.Sprite;
+  target: Phaser.Physics.Arcade.Sprite;
+  coins: Phaser.Physics.Arcade.Group;
   health: number;
 
-  constructor(scene: Phaser.Scene, x: number, y: number, target: Phaser.Physics.Arcade.Sprite) {
+  constructor(
+    scene: Phaser.Scene,
+    x: number,
+    y: number,
+    target: Phaser.Physics.Arcade.Sprite,
+    coins: Phaser.Physics.Arcade.Group,
+  ) {
     super(scene, x, y, 'enemy');
     this.target = target;
-    this.health = 100;
+    this.coins = coins;
+
+    this.health = constants.ENEMY_HEALTH;
 
     scene.add.existing(this);
     scene.physics.add.existing(this);
@@ -43,16 +53,17 @@ export class Enemy extends Phaser.Physics.Arcade.Sprite {
     });
 
     if (this.health <= 0) {
-      this.destroy();
+      this.die();
     } else {
       this.scene.add.particles(this.x, this.y, 'redPixel', bloodDamageConfig).explode(20);
     }
   }
 
-  destroy() {
+  die() {
     const blood = this.scene.add.sprite(this.x, this.y, 'blood');
     blood.play('blood-explode');
     this.scene.add.particles(this.x, this.y, 'redPixel', bloodExplosionConfig).explode(100);
-    super.destroy();
+    this.coins.add(new Coin(this.scene, this.x, this.y));
+    this.destroy();
   }
 }

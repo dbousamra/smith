@@ -1,5 +1,6 @@
 import { constants } from '../utils';
 import { Bullet } from './Bullet';
+import { Coin } from './Coin';
 import { Enemy } from './Enemy';
 import { Weapon } from './Weapon';
 
@@ -10,6 +11,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
   private dashCooldown: number = 0;
   private dashVelocity: { x: number; y: number } = { x: 0, y: 0 };
 
+  coins: number = constants.PLAYER_COINS;
   health: number = constants.PLAYER_HEALTH;
 
   bullets: Phaser.Physics.Arcade.Group;
@@ -104,6 +106,11 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     }
   }
 
+  collectCoin(coin: Coin) {
+    coin.destroy();
+    this.coins += 1;
+  }
+
   update() {
     if (this.isDashing && this.scene.time.now > this.dashTime) {
       this.isDashing = false;
@@ -116,6 +123,10 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
       weapon.setPosition(this.x + this.width, this.y - this.height);
       weapon.update();
     });
+
+    // this.scene.physics.overlap(this, this.scene., (player, coin) => {
+    //   this.collectCoin(coin as Coin);
+    // });
   }
 
   useThunderclap() {

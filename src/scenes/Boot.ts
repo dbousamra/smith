@@ -31,6 +31,11 @@ export class Boot extends Phaser.Scene {
       frameHeight: 100,
     });
 
+    this.load.spritesheet('coin', 'assets/loot.png', {
+      frameWidth: 16,
+      frameHeight: 16,
+    });
+
     const graphics = this.add.graphics();
     graphics.fillStyle(0xff0000, 1);
     graphics.fillRect(0, 0, 2, 2);
@@ -42,21 +47,28 @@ export class Boot extends Phaser.Scene {
     this.anims.create({
       key: 'walk',
       frames: this.anims.generateFrameNumbers('player', { start: 0, end: 6 }),
-      frameRate: 15, // Frames per second
-      repeat: -1, // -1 means loop indefinitely
+      frameRate: 15,
+      repeat: -1,
     });
     this.anims.create({
       key: 'enemy-walk',
       frames: this.anims.generateFrameNumbers('enemy', { start: 0, end: 3 }),
-      frameRate: 15, // Frames per second
-      repeat: -1, // -1 means loop indefinitely
+      frameRate: 15,
+      repeat: -1,
     });
 
     this.anims.create({
       key: 'blood-explode',
       frames: this.anims.generateFrameNumbers('blood', { start: 0, end: 22 }), // Adjust range as needed
-      frameRate: 60, // Adjust to control the speed
-      hideOnComplete: true, // Optional: Automatically hide after animation
+      frameRate: 60,
+      hideOnComplete: true,
+    });
+
+    this.anims.create({
+      key: 'coin-spin',
+      frames: this.anims.generateFrameNumbers('coin', { start: 61, end: 66 }), // Adjust range as needed
+      frameRate: 15,
+      repeat: -1,
     });
 
     this.startText = this.add
