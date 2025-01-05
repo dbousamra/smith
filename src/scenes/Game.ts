@@ -5,6 +5,7 @@ import { Player } from '../entities/Player';
 import { WavesManager } from '../managers/WavesManager';
 import { Coin } from '../entities/Coin';
 import { constants } from '../utils';
+import { BulletFragment } from '../entities/BulletFragment';
 
 export class Game extends Phaser.Scene {
   gameOver!: boolean;
@@ -38,7 +39,7 @@ export class Game extends Phaser.Scene {
     this.player.setScale(1.5); // Scale the player up by 2x
     this.add.existing(this.player);
 
-    // Add collision between player and enemies
+    // Add collision between bullets and enemies
     this.physics.add.collider(
       this.player.bullets,
       this.enemies,
@@ -78,7 +79,13 @@ export class Game extends Phaser.Scene {
 
   onCollideBulletEnemy(bullet: Bullet, enemy: Enemy) {
     enemy.takeDamage(bullet.damage);
+    bullet.fragment();
     bullet.destroy();
+  }
+
+  onCollideBulletFragmentEnemy(bulletFragment: BulletFragment, enemy: Enemy) {
+    enemy.takeDamage(bulletFragment.damage);
+    bulletFragment.destroy();
   }
 
   onCollidePlayerEnemy(player: Player, enemy: Enemy) {
