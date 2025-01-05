@@ -99,8 +99,19 @@ export class Game extends Phaser.Scene {
   update(time: number, delta: number): void {
     this.wavesManager.update();
 
+    if (this.wavesManager.state === 'active') {
+    }
+
     if (this.wavesManager.state === 'complete') {
       this.gameComplete = true;
+    }
+
+    if (this.wavesManager.state === 'waveCompleted') {
+      this.coins.children.iterate((obj) => {
+        const coin = obj as Coin;
+        this.physics.moveToObject(coin, this.player, constants.COIN_PICKUP_END_WAVE_SPEED);
+        return true;
+      });
     }
 
     this.coins.children.iterate((obj) => {

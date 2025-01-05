@@ -5,23 +5,21 @@ import { Enemy } from './Enemy';
 import { Weapon } from './Weapon';
 
 export class Player extends Phaser.Physics.Arcade.Sprite {
-  private keys: Record<string, Phaser.Input.Keyboard.Key>;
-  private isDashing: boolean = false;
-  private dashTime: number = 0;
-  private dashCooldown: number = 0;
-  private dashVelocity: { x: number; y: number } = { x: 0, y: 0 };
-
+  initialPosition: { x: number; y: number };
+  keys: Record<string, Phaser.Input.Keyboard.Key>;
+  isDashing: boolean = false;
+  dashTime: number = 0;
+  dashCooldown: number = 0;
+  dashVelocity: { x: number; y: number } = { x: 0, y: 0 };
   coins: number = constants.PLAYER_COINS;
   health: number = constants.PLAYER_HEALTH;
-
   bullets: Phaser.Physics.Arcade.Group;
-
   weapon: Weapon;
-
   thunderclapCooldown: boolean;
 
   constructor(scene: Phaser.Scene, x: number, y: number) {
     super(scene, x, y, 'player');
+    this.initialPosition = { x, y };
 
     // Add player to the scene
     scene.physics.add.existing(this);

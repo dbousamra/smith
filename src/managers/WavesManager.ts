@@ -39,7 +39,7 @@ export class WavesManager {
       return;
     }
 
-    if (this.waveCount > 3) {
+    if (this.waveCount > constants.WAVE_COUNT) {
       this.state = 'complete';
       return;
     }

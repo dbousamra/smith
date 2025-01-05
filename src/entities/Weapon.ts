@@ -8,6 +8,7 @@ export class Weapon extends Phaser.GameObjects.Sprite {
 
   constructor(scene: Phaser.Scene, x: number, y: number, bullets: Phaser.Physics.Arcade.Group) {
     super(scene, x, y, 'ak47', 0);
+    this.locked = false;
     this.bullets = bullets;
     this.scale = 1;
 
@@ -27,6 +28,10 @@ export class Weapon extends Phaser.GameObjects.Sprite {
   }
 
   shoot() {
+    if (this.locked) {
+      return;
+    }
+
     const bullet = new Bullet(this.scene, this.x, this.y, Phaser.Math.Between(20, 80));
     this.bullets.add(bullet);
 
@@ -40,6 +45,10 @@ export class Weapon extends Phaser.GameObjects.Sprite {
   }
 
   preUpdate() {
+    if (this.locked) {
+      return;
+    }
+
     // Rotate the weapon to point towards the cursor
     const pointer = this.scene.input.activePointer;
     const angle = Phaser.Math.Angle.Between(this.x, this.y, pointer.worldX, pointer.worldY);

@@ -56,7 +56,7 @@ export class GameUI extends Phaser.Scene {
     this.waveStateText.setScrollFactor(0);
     this.waveStateText.setDepth(10);
 
-    this.alertText = this.add.text(this.cameras.main.centerX, this.cameras.main.centerY, '', {
+    this.alertText = this.add.text(this.cameras.main.centerX, this.cameras.main.centerY * 0.7, '', {
       fontSize: '40px',
       color: '#ffff00',
     });
