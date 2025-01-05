@@ -39,7 +39,7 @@ export class Weapon extends Phaser.GameObjects.Sprite {
     (bullet.body! as Phaser.Physics.Arcade.Body).setVelocity(velocityX, velocityY);
   }
 
-  update() {
+  preUpdate() {
     // Rotate the weapon to point towards the cursor
     const pointer = this.scene.input.activePointer;
     const angle = Phaser.Math.Angle.Between(this.x, this.y, pointer.worldX, pointer.worldY);

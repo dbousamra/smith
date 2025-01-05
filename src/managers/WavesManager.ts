@@ -8,11 +8,10 @@ export class WavesManager {
   enemies: Phaser.Physics.Arcade.Group;
   coins: Phaser.Physics.Arcade.Group;
   player: Player;
-  wave: number;
+
+  state: 'active' | 'waveCompleted' | 'waveBeginning' | 'complete';
   enemiesLeftToSpawn: number;
-  initialSpawnDelay: number;
-  waveActive: boolean;
-  waveTransition: boolean;
+  waveCount: number;
 
   constructor(
     scene: Phaser.Scene,
@@ -24,55 +23,56 @@ export class WavesManager {
     this.enemies = enemies;
     this.coins = coins;
     this.player = player;
-    this.wave = 1;
-    this.enemiesLeftToSpawn = constants.WAVE_ENEMY_COUNT; // Number of enemies per wave
-    this.initialSpawnDelay = constants.WAVE_SPAWN_DELAY;
-    this.waveActive = false;
-    this.waveTransition = false;
-  }
 
-  start() {
-    this.startWave();
+    this.state = 'waveBeginning';
+    this.enemiesLeftToSpawn = constants.WAVE_ENEMY_COUNT;
+    this.waveCount = 1;
   }
 
   update() {
-    if (this.waveActive && this.enemiesLeftToSpawn <= 0 && this.enemies.countActive(true) === 0) {
-      this.nextWave();
+    if (
+      this.state === 'active' &&
+      this.enemiesLeftToSpawn <= 0 &&
+      this.enemies.countActive() === 0
+    ) {
+      this.completeWave();
+      return;
+    }
+
+    if (this.waveCount > 3) {
+      this.state = 'complete';
+      return;
     }
   }
 
-  startWave() {
-    this.waveActive = true;
+  start() {
+    this.state = 'active';
+
     this.scene.time.addEvent({
-      delay: this.initialSpawnDelay,
+      delay: 100,
       callback: this.spawnEnemy,
       callbackScope: this,
-      loop: true,
       repeat: this.enemiesLeftToSpawn - 1,
     });
   }
 
-  spawnEnemy() {
-    if (this.enemiesLeftToSpawn > 0) {
-      const x = Phaser.Math.Between(0, this.scene.scale.width);
-      const y = Phaser.Math.Between(0, this.scene.scale.height);
-      const enemy = new Enemy(this.scene, x, y, this.player, this.coins);
-      this.enemies.add(enemy);
-      this.enemiesLeftToSpawn--;
-    }
+  completeWave() {
+    this.state = 'waveCompleted';
+    this.scene.time.delayedCall(3000, this.newWave, [], this);
   }
 
-  nextWave() {
-    this.wave++;
-    this.waveTransition = true;
-    if (this.wave > 3) {
-      this.scene.scene.start('GameComplete');
-      return;
-    }
-    this.enemiesLeftToSpawn = constants.WAVE_ENEMY_COUNT; // Reset the number of enemies for the next wave
-    this.initialSpawnDelay -= 10; // Decrease spawn delay for the next wave
-    this.waveActive = false;
+  newWave() {
+    this.state = 'waveBeginning';
+    this.waveCount += 1;
+    this.enemiesLeftToSpawn = this.waveCount * constants.WAVE_ENEMY_COUNT;
+    this.scene.time.delayedCall(3000, this.start, [], this);
+  }
 
-    this.scene.time.delayedCall(constants.WAVE_DELAY_BETWEEN, this.startWave, [], this); // Start the next wave after a short delay
+  spawnEnemy() {
+    const x = Phaser.Math.Between(0, this.scene.scale.width);
+    const y = Phaser.Math.Between(0, this.scene.scale.height);
+    const enemy = new Enemy(this.scene, x, y, this.player, this.coins);
+    this.enemies.add(enemy);
+    this.enemiesLeftToSpawn--;
   }
 }

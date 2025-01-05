@@ -6,14 +6,15 @@ export class GameUI extends Phaser.Scene {
   healthText!: Phaser.GameObjects.Text;
   fpsText!: Phaser.GameObjects.Text;
   waveText!: Phaser.GameObjects.Text;
-  waveAlertText!: Phaser.GameObjects.Text;
+  alertText!: Phaser.GameObjects.Text;
   coinText!: Phaser.GameObjects.Text;
+  waveStateText!: Phaser.GameObjects.Text;
 
   player!: Player;
   wavesManager!: WavesManager;
 
   constructor() {
-    super('WorldUI');
+    super('GameUI');
   }
 
   create(options: { player: Player; wavesManager: WavesManager }) {
@@ -41,39 +42,51 @@ export class GameUI extends Phaser.Scene {
     this.waveText.setScrollFactor(0);
     this.waveText.setDepth(10);
 
-    this.coinText = this.add.text(200, 250, 'Coins: 0', {
+    this.coinText = this.add.text(200, 300, 'Coins: 0', {
       fontSize: '20px',
       color: '#ffff00',
     });
     this.coinText.setScrollFactor(0);
     this.coinText.setDepth(10);
 
-    this.waveAlertText = this.add.text(this.cameras.main.centerX, this.cameras.main.centerY, '', {
+    this.waveStateText = this.add.text(200, 250, this.wavesManager.state, {
+      fontSize: '20px',
+      color: '#ff00ff',
+    });
+    this.waveStateText.setScrollFactor(0);
+    this.waveStateText.setDepth(10);
+
+    this.alertText = this.add.text(this.cameras.main.centerX, this.cameras.main.centerY, '', {
       fontSize: '40px',
       color: '#ffff00',
     });
-    this.waveAlertText.setOrigin(0.5);
-    this.waveAlertText.setScrollFactor(0);
-    this.waveAlertText.setDepth(20);
-    this.waveAlertText.setVisible(false);
+    this.alertText.setOrigin(0.5);
+    this.alertText.setScrollFactor(0);
+    this.alertText.setDepth(20);
+    this.alertText.setVisible(false);
   }
 
   update() {
     this.healthText.setText(`Health: ${this.player.health}%`);
     this.fpsText.setText(`FPS: ${Math.floor(this.game.loop.actualFps)}`);
-    this.waveText.setText(`Wave: ${this.wavesManager.wave}`);
     this.coinText.setText(`Coins: ${this.player.coins}`);
-    if (this.wavesManager.waveTransition) {
-      this.showWaveAlert(`Wave ${this.wavesManager.wave}`);
-      this.wavesManager.waveTransition = false;
+    this.waveText.setText(`Wave: ${this.wavesManager.waveCount}`);
+    this.waveStateText.setText(`Wave State: ${this.wavesManager.state}`);
+
+    if (this.wavesManager.state === 'waveCompleted') {
+      this.showAlert(`Wave ${this.wavesManager.waveCount} complete!`);
+    }
+
+    if (this.wavesManager.state === 'waveBeginning') {
+      this.showAlert(`Wave ${this.wavesManager.waveCount} beginning. Get ready!`);
     }
   }
 
-  showWaveAlert(message: string) {
-    this.waveAlertText.setText(message);
-    this.waveAlertText.setVisible(true);
+  showAlert(message: string) {
+    this.alertText.setText(message);
+    this.alertText.setVisible(true);
     this.time.delayedCall(2000, () => {
-      this.waveAlertText.setVisible(false);
+      this.alertText.setVisible(false);
     });
   }
 }

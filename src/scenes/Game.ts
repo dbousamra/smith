@@ -1,13 +1,14 @@
 import Phaser from 'phaser';
 import { Bullet } from '../entities/Bullet';
+import { Coin } from '../entities/Coin';
 import { Enemy } from '../entities/Enemy';
 import { Player } from '../entities/Player';
 import { WavesManager } from '../managers/WavesManager';
-import { Coin } from '../entities/Coin';
 import { constants } from '../utils';
 
 export class Game extends Phaser.Scene {
   gameOver!: boolean;
+  gameComplete!: boolean;
   player!: Player;
   enemies!: Phaser.Physics.Arcade.Group;
   coins!: Phaser.Physics.Arcade.Group;
@@ -19,6 +20,7 @@ export class Game extends Phaser.Scene {
 
   create() {
     this.gameOver = false;
+    this.gameComplete = false;
 
     const width = this.sys.game.config.width as number;
     const height = this.sys.game.config.height as number;
@@ -67,7 +69,7 @@ export class Game extends Phaser.Scene {
     this.wavesManager = new WavesManager(this, this.enemies, this.coins, this.player);
     this.wavesManager.start();
 
-    this.scene.launch('WorldUI', {
+    this.scene.launch('GameUI', {
       player: this.player,
       wavesManager: this.wavesManager,
     });
@@ -95,13 +97,11 @@ export class Game extends Phaser.Scene {
   }
 
   update(time: number, delta: number): void {
-    if (this.gameOver) {
-      this.scene.switch('GameOver');
-      return;
-    }
-
-    this.player.update();
     this.wavesManager.update();
+
+    if (this.wavesManager.state === 'complete') {
+      this.gameComplete = true;
+    }
 
     this.coins.children.iterate((obj) => {
       const coin = obj as Coin;
@@ -113,5 +113,15 @@ export class Game extends Phaser.Scene {
       }
       return true;
     });
+
+    if (this.gameOver) {
+      this.scene.switch('GameOver');
+      return;
+    }
+
+    if (this.gameComplete) {
+      this.scene.switch('GameComplete');
+      return;
+    }
   }
 }

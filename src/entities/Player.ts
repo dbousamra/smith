@@ -16,7 +16,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
 
   bullets: Phaser.Physics.Arcade.Group;
 
-  private weapons: Weapon[] = [];
+  weapon: Weapon;
 
   thunderclapCooldown: boolean;
 
@@ -44,12 +44,16 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     });
 
     // Create a weapon
-    this.weapons.push(new Weapon(scene, x, y, this.bullets));
+    this.weapon = new Weapon(scene, x, y, this.bullets);
 
     this.thunderclapCooldown = false;
   }
 
   handleInput() {
+    if (this.isDashing && this.scene.time.now > this.dashTime) {
+      this.isDashing = false;
+    }
+
     let velocityX = 0;
     let velocityY = 0;
 
@@ -111,22 +115,12 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     this.coins += 1;
   }
 
-  update() {
-    if (this.isDashing && this.scene.time.now > this.dashTime) {
-      this.isDashing = false;
-    }
+  preUpdate() {
     this.handleInput();
     this.handleAnimation();
 
-    this.weapons.forEach((weapon) => {
-      this.scene.children.bringToTop(weapon);
-      weapon.setPosition(this.x + this.width, this.y - this.height);
-      weapon.update();
-    });
-
-    // this.scene.physics.overlap(this, this.scene., (player, coin) => {
-    //   this.collectCoin(coin as Coin);
-    // });
+    this.scene.children.bringToTop(this.weapon);
+    this.weapon.setPosition(this.x + this.width, this.y - this.height);
   }
 
   useThunderclap() {
