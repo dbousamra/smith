@@ -4,7 +4,8 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "dev": "vite dev"
+    "dev": "vite dev",
+    "build": "vite build"
   },
   "dependencies": {
     "phaser": "^3.87.0"
