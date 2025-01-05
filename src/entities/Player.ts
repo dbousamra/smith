@@ -1,5 +1,6 @@
 import { constants } from '../utils';
 import { Bullet } from './Bullet';
+import { BulletFragment } from './BulletFragment';
 import { Coin } from './Coin';
 import { Enemy } from './Enemy';
 import { Weapon } from './Weapon';
